@@ -27,6 +27,34 @@ def check_weather():
     print(conn["consolidated_weather"][4]["weather_state_name"])
 
 
+def play_weather_chime(weather_state_name:str):
+
+    #todo: map the consolidated weather to an audio file.
+    if weather_state_name == "Snow":
+        pass
+    elif weather_state_name == "Sleet":
+        pass
+    elif weather_state_name == "Sleet":
+        pass
+    elif weather_state_name == "Hail":
+        pass
+    elif weather_state_name == "Thunderstorm":
+        pass
+    elif weather_state_name == "Heavy Rain":
+        pass
+    elif weather_state_name == "Light Rain":
+        pass
+    elif weather_state_name == "Showers":
+        pass
+    elif weather_state_name == "Heavy Cloud":
+        pass
+    elif weather_state_name == "Light Cloud":
+        pass
+    elif weather_state_name == "Clear":
+        pass
+
+
+
 if __name__  == "__main__":
     t = RepeatedTimer(3.0, check_weather,daemon=False) # check weather every 60 seconds
     t.start()
