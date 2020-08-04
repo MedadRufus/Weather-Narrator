@@ -1,9 +1,17 @@
-#######################################
+########################################################################################################################
 #
 # Created: 04/08/2020
 # Author: Medad Newman
 #
-########################################
+# This app pipes the tone of the weather
+# every hour. It marks the passing of time
+# with a chime that corresponds to the weather.
+# e.g. when there is thunder, it plays thunder sounds
+#
+# Use case: You are deep inside a building. And you rarely go out. You need to get an idea
+# of the weather. This program will wake up and chime the weather, letting you know
+# what the weather outside is like!
+########################################################################################################################
 
 import json
 import requests
