@@ -9,6 +9,7 @@
 ########################################################################################################################
 
 
+import getpass
 import json
 import logging
 import os
@@ -37,14 +38,28 @@ class WeatherApp:
                               log_line_template="%(color_on)s[%(created)d] [%(threadName)s] [%(levelname)-8s] %(message)s%(color_off)s")):
             print("Failed to setup logging, aborting.")
 
+
         # setup text to speech engine
         self.engine = pyttsx3.init()
         self.play_tunes = False
         self.city = None
         self.temperature = None
+        self.autostart = False
 
         # now begin the program
         self.run_everything()
+
+    def setup_auto_start(self):
+        self.add_to_startup()
+
+    def add_to_startup(self, file_path=""):
+        USER_NAME = getpass.getuser()
+
+        if file_path == "":
+            file_path = os.path.dirname(os.path.realpath(__file__))
+        bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % USER_NAME
+        with open(bat_path + '\\' + "open.bat", "w+") as bat_file:
+            bat_file.write(r'start "" %s' % file_path)
 
     def run_everything(self):
         """
@@ -55,6 +70,10 @@ class WeatherApp:
         parser = ConfigParser()
         parser.read('app_config.conf')
         times = json.loads(parser.get("Times", "minute"))
+
+        if self.autostart:
+            self.setup_auto_start()
+
 
         # chime once at the beginning
         self.check_weather()
