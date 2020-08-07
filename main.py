@@ -124,7 +124,7 @@ if __name__  == "__main__":
     # chime once at the beginning
     wa.check_weather()
 
-
+    # create job for the scheduler
     def job():
         wa.check_weather()
 
