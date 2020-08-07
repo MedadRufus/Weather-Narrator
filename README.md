@@ -6,7 +6,7 @@ of what the weather was like outside. You lost track of time. It does not have t
 
 Make your day better with the Weather Narrator!
 At every 15 minutes( 0th, 15th, 30th, 45th minute of each hour), you get a simple notification of the time and weather 
-read out to you. No need to switch screens or look it up anywhere.
+read out to you by the narrator. No need to switch screens or look it up anywhere.
 
 Stay informed!
 
