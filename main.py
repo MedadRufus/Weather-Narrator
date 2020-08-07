@@ -13,16 +13,23 @@
 # what the weather outside is like!
 ########################################################################################################################
 
-import requests
-from timers import RepeatedTimer, RepeatTimer
-from playsound import playsound
-from logging_utils import setup_logging
-import pyttsx3
-from datetime import datetime
 
+from logging_utils import setup_logging
+
+# inbuilt dependencies
+from datetime import datetime
+import time
 import os
 import sys
 import logging
+
+# External dependentcies
+from playsound import playsound
+import pyttsx3
+import schedule
+import requests
+
+
 
 
 class WeatherApp:
@@ -34,15 +41,8 @@ class WeatherApp:
                               logfile_file=script_name + ".log", logfile_log_level="debug", logfile_log_color=False,
                               log_line_template="%(color_on)s[%(created)d] [%(threadName)s] [%(levelname)-8s] %(message)s%(color_off)s")):
             print("Failed to setup logging, aborting.")
-            return 1
 
         self.engine = pyttsx3.init()
-        # Log some messages
-        # logging.debug("Debug message")
-        # logging.info("Info message")
-        # logging.warning("Warning message")
-        # logging.error("Error message")
-        # logging.critical("Critical message")
         self.play_tunes = False
 
 
@@ -95,7 +95,6 @@ class WeatherApp:
 
 
     def speak_text(self,text:str):
-
         self.engine.say(text)
         self.engine.runAndWait()
         self.engine.stop()
@@ -110,35 +109,23 @@ class WeatherApp:
         return current_time
 
 if __name__  == "__main__":
-    import time
     wa = WeatherApp()
-    # chime every 15 minutes.
-    # TODO: chime on the 15th minute of each hour
 
-    import sched, time
-
-    import schedule
-    import time
+    # chime once at the beginning
+    wa.check_weather()
 
 
     def job():
-        print("I'm working...")
+        wa.check_weather()
 
-
-    schedule.every(10).minutes.do(job)
-    schedule.every().hour.do(job)
-    schedule.every().day.at("10:30").do(job)
-    schedule.every().monday.do(job)
-    schedule.every().wednesday.at("13:15").do(job)
+    # chime on the 15th minute of each hour
+    schedule.every().hour.at(":00").do(job)
+    schedule.every().hour.at(":15").do(job)
+    schedule.every().hour.at(":30").do(job)
+    schedule.every().hour.at(":45").do(job)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
 
-    # Set up scheduler
-    s = sched.scheduler(time.localtime, time.sleep)
-    # Schedule when you want the action to occur
-    s.enterabs(time.strptime('Tue May 01 11:05:17 2018'), 0, wa.check_weather())
-    # Block until the action has been run
-    s.run()
 
