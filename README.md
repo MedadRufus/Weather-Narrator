@@ -36,7 +36,8 @@ python main.py
 
 # Autostarting the program
 If you would like to start up this application automatically everytime you log into your computer,
-Open   `app_config.conf` in the same directory and change `autostart` to `True`
+open   `app_config.conf` in the same directory and change `autostart` to `True`. By default, autostart
+is disabled.
 
 ```bash
 [Autostart]
@@ -44,7 +45,8 @@ autostart = True
 ```
 
 It will make a batch file in `C:\Users\YOUR_USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`
-where `YOUR_USERNAME` is your account's username. You can delete the batchfile `weather_narrator_autostart.bat` from 
+where `YOUR_USERNAME` is your account's username. This batchfile will start up the python program
+after logging in. You can delete the batchfile `weather_narrator_autostart.bat` from 
 there if you don't want it to auto start again.
 
 
