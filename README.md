@@ -53,6 +53,7 @@ Just change the minutes list to the times you want it to chime each hour
 # Acknowledgements
 
 Thanks to [MetaWeather.com](MetaWeather.com) for the freely available data api for weather.
+Application written by Medad Newman
 
 # TODO
 make the weather location configurable. It is currently set to London,UK by default
