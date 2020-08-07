@@ -3,14 +3,9 @@
 # Created: 04/08/2020
 # Author: Medad Newman
 #
-# This app pipes the tone of the weather
-# every hour. It marks the passing of time
-# with a chime that corresponds to the weather.
-# e.g. when there is thunder, it plays thunder sounds
-#
 # Use case: You are deep inside a building. And you rarely go out. You need to get an idea
 # of the weather. This program will wake up and chime the weather, letting you know
-# what the weather outside is like!
+# what the weather outside is like! Also tells you the time
 ########################################################################################################################
 
 
@@ -46,12 +41,13 @@ class WeatherApp:
         self.engine = pyttsx3.init()
         self.play_tunes = False
         self.city = None
+        self.temperature = None
 
         # now begin the program
         self.run_everything()
 
     def run_everything(self):
-        # read the config gile
+        # read the config file
         parser = ConfigParser()
         parser.read('app_config.conf')
         times = json.loads(parser.get("Times", "minute"))
@@ -77,22 +73,26 @@ class WeatherApp:
             time.sleep(1)
 
     def check_weather(self):
-        # Get weather in London from BBC weather and read it out
+        """
+        Get weather in London from BBC weather and read it out
+        :return:  None
+        """
         conn = requests.get("https://www.metaweather.com/api/location/44418/").json()
+        print(conn)
         bbc_weather = conn["consolidated_weather"][0]["weather_state_name"]
-
+        temp = conn["consolidated_weather"][0]["the_temp"]
         logging.debug("The weather is :" + bbc_weather)
 
-        self.play_weather_chime(bbc_weather)
+        self.play_weather_chime(bbc_weather,temp)
 
-    def play_weather_chime(self, weather_state_name: str):
+    def play_weather_chime(self, weather_state_name: str, temperature):
         """
         Read out weather
         :param weather_state_name:
-        :return:
+        :return: None
         """
 
-        self.speak_text("The time is {} and the weather is {}".format(self.get_time(), weather_state_name))
+        self.speak_text("The time is {}, temperature is {:.1f} degrees celcius and the weather is {}".format(self.get_time(),temperature, weather_state_name))
 
     def play_sound(self, file: str):
         playsound('audio_files/{}'.format(file))
@@ -101,7 +101,7 @@ class WeatherApp:
         """
         Use the narrator tool to convert text to audio
         :param text:
-        :return:
+        :return: None
         """
         self.engine.say(text)
         self.engine.runAndWait()
