@@ -47,6 +47,10 @@ class WeatherApp:
         self.run_everything()
 
     def run_everything(self):
+        """
+        The main program the schedules and runs the narrator
+        :return:
+        """
         # read the config file
         parser = ConfigParser()
         parser.read('app_config.conf')
@@ -78,7 +82,6 @@ class WeatherApp:
         :return:  None
         """
         conn = requests.get("https://www.metaweather.com/api/location/44418/").json()
-        print(conn)
         bbc_weather = conn["consolidated_weather"][0]["weather_state_name"]
         temp = conn["consolidated_weather"][0]["the_temp"]
         logging.debug("The weather is :" + bbc_weather)
