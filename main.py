@@ -17,9 +17,8 @@ import sys
 import time
 from configparser import ConfigParser
 from datetime import datetime
-from pathlib import Path
 
-# External dependentcies
+# External dependencies
 import pyttsx3
 import requests
 import schedule
@@ -28,15 +27,11 @@ from playsound import playsound
 from logging_utils import setup_logging
 
 
-
-
-
 class WeatherApp:
 
     def __init__(self):
 
         # setup filepaths
-
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -45,10 +40,10 @@ class WeatherApp:
         # Setup logging
         script_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
         if (not setup_logging(console_log_output="stdout", console_log_level="info", console_log_color=True,
-                              logfile_file=__location__+'\\'+script_name + ".log", logfile_log_level="info", logfile_log_color=False,
+                              logfile_file=__location__ + '\\' + script_name + ".log", logfile_log_level="info",
+                              logfile_log_color=False,
                               log_line_template="%(color_on)s[%(created)d] [%(threadName)s] [%(levelname)-8s] %(message)s%(color_off)s")):
             print("Failed to setup logging, aborting.")
-
 
         # setup text to speech engine
         self.engine = pyttsx3.init()
@@ -65,9 +60,9 @@ class WeatherApp:
 
     def add_to_startup(self, file_path=""):
         """
-        Fire up the applicaiton at windows startup by default.
-        :param file_path:
-        :return:
+        Fire up the application at windows startup by default. It makes a batchfile that autostarts at login
+        :param file_path: Use current directory by default. other wise use supplied path
+        :return: None
         """
         USER_NAME = getpass.getuser()
 
@@ -75,14 +70,12 @@ class WeatherApp:
             file_path = os.path.dirname(os.path.realpath(__file__))
         bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % USER_NAME
         with open(bat_path + '\\' + "weather_narrator_autostart.bat", "w+") as bat_file:
-            bat_file.writelines(["@echo off\n", "python {}\main.py %*\n".format(file_path),"pause\n"])
-
-
+            bat_file.writelines(["@echo off\n", "python {}\main.py %*\n".format(file_path), "pause\n"])
 
     def run_everything(self):
         """
         The main program the schedules and runs the narrator
-        :return:
+        :return: None
         """
         # read the config file
         parser = ConfigParser()
@@ -97,7 +90,6 @@ class WeatherApp:
 
         if self.autostart:
             self.setup_auto_start()
-
 
         # chime once at the beginning
         self.check_weather()
