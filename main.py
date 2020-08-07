@@ -17,6 +17,7 @@ import sys
 import time
 from configparser import ConfigParser
 from datetime import datetime
+from pathlib import Path
 
 # External dependentcies
 import pyttsx3
@@ -26,16 +27,25 @@ from playsound import playsound
 
 from logging_utils import setup_logging
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+
+
 
 class WeatherApp:
 
     def __init__(self):
+
+        # setup filepaths
+
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+        self.fp = (os.path.join(__location__, 'app_config.conf'))
+
         # Setup logging
         script_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
         if (not setup_logging(console_log_output="stdout", console_log_level="info", console_log_color=True,
-                              logfile_file=script_name + ".log", logfile_log_level="info", logfile_log_color=False,
+                              logfile_file=__location__+'\\'+script_name + ".log", logfile_log_level="info", logfile_log_color=False,
                               log_line_template="%(color_on)s[%(created)d] [%(threadName)s] [%(levelname)-8s] %(message)s%(color_off)s")):
             print("Failed to setup logging, aborting.")
 
@@ -76,9 +86,14 @@ class WeatherApp:
         """
         # read the config file
         parser = ConfigParser()
-        fp = (os.path.join(__location__, 'app_config.conf'))
-        parser.read(fp)
+
+        parser.read(self.fp)
+
+        # get the configured times
         times = json.loads(parser.get("Times", "minute"))
+
+        # get whether user wants the application to autostart at login
+        self.autostart = parser.getboolean('Autostart', 'autostart')
 
         if self.autostart:
             self.setup_auto_start()
