@@ -123,6 +123,7 @@ class WeatherApp:
 if __name__  == "__main__":
     wa = WeatherApp()
 
+    # read the config gile
     parser = ConfigParser()
     parser.read('app_config.conf')
     times = json.loads(parser.get("Times","minute"))
@@ -135,6 +136,7 @@ if __name__  == "__main__":
     def job():
         wa.check_weather()
 
+    # schedule the times
     for minute in times:
         # TODO:assert if time is within 0 to 60
         # chime on the nth minute of each hour
@@ -142,6 +144,7 @@ if __name__  == "__main__":
         logging.info("Time sheduled for "+time_str)
         schedule.every().hour.at(time_str).do(job)
 
+    # sleep wait
     while True:
         schedule.run_pending()
         time.sleep(1)
