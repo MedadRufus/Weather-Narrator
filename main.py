@@ -42,6 +42,7 @@ class WeatherApp:
                               log_line_template="%(color_on)s[%(created)d] [%(threadName)s] [%(levelname)-8s] %(message)s%(color_off)s")):
             print("Failed to setup logging, aborting.")
 
+        # setup text to speech engine
         self.engine = pyttsx3.init()
         self.play_tunes = False
 
@@ -95,12 +96,21 @@ class WeatherApp:
 
 
     def speak_text(self,text:str):
+        """
+        Use the narrator tool to convert text to audio
+        :param text:
+        :return:
+        """
         self.engine.say(text)
         self.engine.runAndWait()
         self.engine.stop()
 
 
     def get_time(self):
+        """
+        Just get the time
+        :return: time as aa:bb cc where aa is hour is 12 hour format, bb in minutes, cc is am or pm
+        """
         now = datetime.now()
         time_format = '%I:%M %p'
         current_time = now.strftime(time_format)
