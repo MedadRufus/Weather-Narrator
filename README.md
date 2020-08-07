@@ -10,6 +10,8 @@ a nice quote read out to you. No need to switch screens or look it up anywhere.
 
 Stay informed!
 
+I have been using it for the last few hours and it is an interesting experience.
+
 # How to run
 First install any python3 installation in your computer. Note that the program is only tested on *Windows*
 Operating System.
@@ -45,3 +47,11 @@ minute: [0,15,30,45]
 ```
 
 Just change the minutes list to the times you want it to chime each hour
+
+
+# Acknowledgements
+
+Thanks to [MetaWeather.com](MetaWeather.com) for the freely available data api for weather.
+
+# TODO
+make the weather location configurable. It is currently set to London,UK by default
