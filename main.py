@@ -22,6 +22,8 @@ import time
 import os
 import sys
 import logging
+import json
+from configparser import ConfigParser
 
 # External dependentcies
 from playsound import playsound
@@ -121,6 +123,11 @@ class WeatherApp:
 if __name__  == "__main__":
     wa = WeatherApp()
 
+    parser = ConfigParser()
+    parser.read('app_config.conf')
+    times = json.loads(parser.get("Times","minute"))
+
+
     # chime once at the beginning
     wa.check_weather()
 
@@ -128,11 +135,12 @@ if __name__  == "__main__":
     def job():
         wa.check_weather()
 
-    # chime on the 15th minute of each hour
-    schedule.every().hour.at(":00").do(job)
-    schedule.every().hour.at(":15").do(job)
-    schedule.every().hour.at(":30").do(job)
-    schedule.every().hour.at(":45").do(job)
+    for minute in times:
+        # TODO:assert if time is within 0 to 60
+        # chime on the nth minute of each hour
+        time_str = ":{:02d}".format(minute)
+        logging.info("Time sheduled for "+time_str)
+        schedule.every().hour.at(time_str).do(job)
 
     while True:
         schedule.run_pending()
