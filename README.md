@@ -30,3 +30,18 @@ Now to execute the program, run on command line.
 ```bash
 python main.py
 ```
+
+
+# Customisations
+
+You can change when you receive notifications each hour. Simply edit `app_config.conf`.
+It looks like this by default
+```bash
+[Times]
+# Select which minutes of each hour you want a notification. The list can be
+# expanded as required. e.g. [3,5,12,23,57]. Ensure that the values are 0-59 inclusive
+minute: [0,15,30,45]
+
+```
+
+Just change the minutes list to the times you want it to chime each hour
