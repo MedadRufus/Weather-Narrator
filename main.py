@@ -14,24 +14,22 @@
 ########################################################################################################################
 
 
-from logging_utils import setup_logging
-
-# inbuilt dependencies
-from datetime import datetime
-import time
+import json
+import logging
 import os
 import sys
-import logging
-import json
+import time
 from configparser import ConfigParser
+# inbuilt dependencies
+from datetime import datetime
 
+import pyttsx3
+import requests
+import schedule
 # External dependentcies
 from playsound import playsound
-import pyttsx3
-import schedule
-import requests
 
-
+from logging_utils import setup_logging
 
 
 class WeatherApp:
@@ -83,27 +81,23 @@ class WeatherApp:
         conn = requests.get("https://www.metaweather.com/api/location/44418/").json()
         bbc_weather = conn["consolidated_weather"][0]["weather_state_name"]
 
-        logging.debug("The weather is :"+bbc_weather)
+        logging.debug("The weather is :" + bbc_weather)
 
         self.play_weather_chime(bbc_weather)
 
-
-    def play_weather_chime(self,weather_state_name:str):
+    def play_weather_chime(self, weather_state_name: str):
         """
         Read out weather
         :param weather_state_name:
         :return:
         """
 
-        self.speak_text("The time is {} and the weather is {}".format(self.get_time(),weather_state_name))
+        self.speak_text("The time is {} and the weather is {}".format(self.get_time(), weather_state_name))
 
-
-
-    def play_sound(self,file:str):
+    def play_sound(self, file: str):
         playsound('audio_files/{}'.format(file))
 
-
-    def speak_text(self,text:str):
+    def speak_text(self, text: str):
         """
         Use the narrator tool to convert text to audio
         :param text:
@@ -112,7 +106,6 @@ class WeatherApp:
         self.engine.say(text)
         self.engine.runAndWait()
         self.engine.stop()
-
 
     def get_time(self):
         """
@@ -126,9 +119,6 @@ class WeatherApp:
         logging.info("The current time is {}".format(current_time))
         return current_time
 
-if __name__  == "__main__":
+
+if __name__ == "__main__":
     wa = WeatherApp()
-
-
-
-
