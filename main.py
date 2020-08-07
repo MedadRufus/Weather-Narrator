@@ -83,7 +83,7 @@ class WeatherApp:
         temp = conn["consolidated_weather"][0]["the_temp"]
         logging.debug("The weather is :" + bbc_weather)
 
-        self.play_weather_chime(bbc_weather,temp)
+        self.play_weather_chime(bbc_weather, temp)
 
     def play_weather_chime(self, weather_state_name: str, temperature):
         """
@@ -92,7 +92,10 @@ class WeatherApp:
         :return: None
         """
 
-        self.speak_text("The time is {}, temperature is {:.1f} degrees celcius and the weather is {}".format(self.get_time(),temperature, weather_state_name))
+        self.speak_text(
+            "The time is {}, temperature is {:.1f} degrees celcius and the weather is {}".format(self.get_time(),
+                                                                                                 temperature,
+                                                                                                 weather_state_name))
 
     def play_sound(self, file: str):
         playsound('audio_files/{}'.format(file))
