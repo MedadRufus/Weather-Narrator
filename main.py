@@ -8,7 +8,7 @@
 # what the weather outside is like! Also tells you the time
 ########################################################################################################################
 
-
+# inbuilt dependencies
 import getpass
 import json
 import logging
@@ -16,17 +16,18 @@ import os
 import sys
 import time
 from configparser import ConfigParser
-# inbuilt dependencies
 from datetime import datetime
 
+# External dependentcies
 import pyttsx3
 import requests
 import schedule
-# External dependentcies
 from playsound import playsound
 
 from logging_utils import setup_logging
 
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 class WeatherApp:
 
@@ -44,7 +45,7 @@ class WeatherApp:
         self.play_tunes = False
         self.city = None
         self.temperature = None
-        self.autostart = False
+        self.autostart = True
 
         # now begin the program
         self.run_everything()
@@ -53,13 +54,20 @@ class WeatherApp:
         self.add_to_startup()
 
     def add_to_startup(self, file_path=""):
+        """
+        Fire up the applicaiton at windows startup by default.
+        :param file_path:
+        :return:
+        """
         USER_NAME = getpass.getuser()
 
         if file_path == "":
             file_path = os.path.dirname(os.path.realpath(__file__))
         bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % USER_NAME
-        with open(bat_path + '\\' + "open.bat", "w+") as bat_file:
-            bat_file.write(r'start "" %s' % file_path)
+        with open(bat_path + '\\' + "weather_narrator_autostart.bat", "w+") as bat_file:
+            bat_file.writelines(["@echo off\n", "python {}\main.py %*\n".format(file_path),"pause\n"])
+
+
 
     def run_everything(self):
         """
@@ -68,7 +76,8 @@ class WeatherApp:
         """
         # read the config file
         parser = ConfigParser()
-        parser.read('app_config.conf')
+        fp = (os.path.join(__location__, 'app_config.conf'))
+        parser.read(fp)
         times = json.loads(parser.get("Times", "minute"))
 
         if self.autostart:
