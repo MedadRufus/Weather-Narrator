@@ -47,49 +47,55 @@ class WeatherApp:
         # setup text to speech engine
         self.engine = pyttsx3.init()
         self.play_tunes = False
+        self.city = None
 
+        # now begin the program
+        self.run_everything()
+
+    def run_everything(self):
+        # read the config gile
+        parser = ConfigParser()
+        parser.read('app_config.conf')
+        times = json.loads(parser.get("Times", "minute"))
+
+        # chime once at the beginning
+        self.check_weather()
+
+        # create job for the scheduler
+        def job():
+            self.check_weather()
+
+        # schedule the times
+        for minute in times:
+            # TODO:assert if time is within 0 to 60
+            # chime on the nth minute of each hour
+            time_str = ":{:02d}".format(minute)
+            logging.info("Time sheduled for " + time_str)
+            schedule.every().hour.at(time_str).do(job)
+
+        # sleep wait
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
 
     def check_weather(self):
+        # Get weather in London from BBC weather and read it out
         conn = requests.get("https://www.metaweather.com/api/location/44418/").json()
-        # print(conn)
-        # print(conn["consolidated_weather"][0]["weather_state_name"])
-        # print(conn["consolidated_weather"][1]["weather_state_name"])
-        # print(conn["consolidated_weather"][2]["weather_state_name"])
-        # print(conn["consolidated_weather"][3]["weather_state_name"])
-        # print(conn["consolidated_weather"][4]["weather_state_name"])
+        bbc_weather = conn["consolidated_weather"][0]["weather_state_name"]
 
-        logging.debug("The weather is :"+conn["consolidated_weather"][0]["weather_state_name"])
+        logging.debug("The weather is :"+bbc_weather)
 
-
-        self.play_weather_chime(conn["consolidated_weather"][0]["weather_state_name"])
+        self.play_weather_chime(bbc_weather)
 
 
     def play_weather_chime(self,weather_state_name:str):
+        """
+        Read out weather
+        :param weather_state_name:
+        :return:
+        """
 
         self.speak_text("The time is {} and the weather is {}".format(self.get_time(),weather_state_name))
-
-        if self.play_tunes == True:
-            #todo: map the consolidated weather to an audio file.
-            if weather_state_name == "Snow":
-                self.play_sound("Wind-Mark_DiAngelo-1940285615.mp3") # http://soundbible.com/1810-Wind.html
-            elif weather_state_name == "Sleet":
-                self.play_sound("Rain_Inside_House-Mark_DiAngelo-323934112.mp3") # http://soundbible.com/2065-Rain-Inside-House.html by Mark DiAngelo
-            elif weather_state_name == "Hail":
-                self.play_sound("Hailstorm-Mike_Koenig-447872762.mp3") # http://soundbible.com/1718-Hailstorm.html
-            elif weather_state_name == "Thunderstorm":
-                self.play_sound("thunder_strike_2-Mike_Koenig-2099467696.mp3") # http://soundbible.com/2016-Thunder-Strike-2.html
-            elif weather_state_name == "Heavy Rain":
-                self.play_sound("heavy-rain-daniel_simon.mp3") # http://soundbible.com/2217-Heavy-Rain-Wind.html by Daniel Simion
-            elif weather_state_name == "Light Rain":
-                self.play_sound("Rain_Inside_House-Mark_DiAngelo-323934112.mp3") # http://soundbible.com/2065-Rain-Inside-House.html by Mark DiAngelo
-            elif weather_state_name == "Showers":
-                self.play_sound("Rain_Inside_House-Mark_DiAngelo-323934112.mp3") # http://soundbible.com/2065-Rain-Inside-House.html by Mark DiAngelo
-            elif weather_state_name == "Heavy Cloud":
-                self.play_sound("Cargo Plane Ambiance-SoundBible.com-1150109206.mp3")  # http://soundbible.com/490-Cargo-Plane-Ambiance.html
-            elif weather_state_name == "Light Cloud":
-                self.play_sound("Cargo Plane Ambiance-SoundBible.com-1150109206.mp3")  # http://soundbible.com/490-Cargo-Plane-Ambiance.html
-            elif weather_state_name == "Clear":
-                self.play_sound("Sunny Day-SoundBible.com-2064222612.mp3") # http://soundbible.com/1661-Sunny-Day.html
 
 
 
@@ -123,30 +129,6 @@ class WeatherApp:
 if __name__  == "__main__":
     wa = WeatherApp()
 
-    # read the config gile
-    parser = ConfigParser()
-    parser.read('app_config.conf')
-    times = json.loads(parser.get("Times","minute"))
 
-
-    # chime once at the beginning
-    wa.check_weather()
-
-    # create job for the scheduler
-    def job():
-        wa.check_weather()
-
-    # schedule the times
-    for minute in times:
-        # TODO:assert if time is within 0 to 60
-        # chime on the nth minute of each hour
-        time_str = ":{:02d}".format(minute)
-        logging.info("Time sheduled for "+time_str)
-        schedule.every().hour.at(time_str).do(job)
-
-    # sleep wait
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
 
 
